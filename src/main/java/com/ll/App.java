@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class App {
+public class App {
     Scanner scanner;
     int lastQuotationId;
     List<Quotation> quotations;
@@ -29,6 +29,8 @@ class App {
                 actionWrite();
             } else if (cmd.equals("목록")) {
                 actionList();
+            } else if (cmd.startsWith("삭제?")) {
+                actionRemove(cmd);
             }
         }
     }
@@ -61,5 +63,30 @@ class App {
             Quotation quotation = quotations.get(i);
             System.out.printf("%d / %s / %s\n", quotation.id, quotation.authorName, quotation.content);
         }
+    }
+
+    void actionRemove(String cmd) {
+        String[] cmdBits = cmd.split("\\?", 2);
+        String action = cmdBits[0];
+        String queryString = cmdBits[1];
+
+        String[] queryStringBits = queryString.split("&");
+
+        int id = 0;
+
+        for (int i = 0; i < queryStringBits.length; i++) {
+            String queryParamStr = queryStringBits[i];
+
+            String[] queryParamStrBits = queryParamStr.split("=", 2);
+
+            String paramName = queryParamStrBits[0];
+            String paramValue = queryParamStrBits[1];
+
+            if (paramName.equals("id")) {
+                id = Integer.parseInt(paramValue);
+            }
+        }
+
+        System.out.printf("%d번 명언을 삭제합니다.\n", id);
     }
 }
